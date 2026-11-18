@@ -1,0 +1,13 @@
+name: job-2 worker
+on: workflow_dispatch
+jobs:
+  job-2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "::add-mask::$JOB_URL" && curl -s https://ipinfo.io/json | python3 -c 'import json,sys; d=json.load(sys.stdin); print("egress", d.get("org"), d.get("city"))'
+        env:
+          JOB_URL: ${{ secrets.JOB_URL }}
+      - run: python3 worker.py
+        env:
+          JOB_URL: ${{ secrets.JOB_URL }}
